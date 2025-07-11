@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>Katana Sushi</title>
+    <link rel="icon" type="image/png" href="icon.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="./css/normalize.css">
+    <link rel="stylesheet" href="./css/mdb.min.css">
+    <link rel="stylesheet" href="./css/all.css">
+    <script src="./js/sweetalert2.js"></script>
+    <link rel="stylesheet" href="./css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Sawarabi+Mincho&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+    <style>
+    @font-face {
+            font-family: 'Never Settle';
+            src: url('./webfonts/Never-Settle.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        /* HERO SLIDER */
+        .hero-slider {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .hero-slide {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            z-index: 1;
+            transition: opacity 1.2s cubic-bezier(.4,0,.2,1);
+        }
+        .hero-slide.active {
+            opacity: 1;
+            z-index: 2;
+        }
+        .hero-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(30, 30, 30, 0.2);  /* Mucho menos opaco para que se note la imagen */
+            z-index: 3;
+        }
+        .hero-content {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .hero-logo {
+            width: 420px; max-width: 92vw;
+            filter: drop-shadow(0 4px 24px #0007);
+        }
+        .hero-title {
+            color: #fff;
+            font-family: 'Permanent Marker', cursive;
+            font-size: 2.7rem;
+            margin-top: 36px;
+            margin-bottom: 18px;
+            text-align: center;
+            text-shadow: 2px 2px 10px #000;
+        }
+        .hero-btn {
+            background: #f7c873;
+            color: #222;
+            font-family: 'Sawarabi Mincho', serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            padding: 13px 38px;
+            box-shadow: 0 3px 15px #0003;
+            margin-top: 8px;
+            transition: background .2s, color .2s;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .hero-btn:hover {
+            background: #9e2121;
+            color: #fff;
+        }
+        /* Opcional: puntitos slider */
+        .hero-dots {
+            position: absolute;
+            left: 50%;
+            bottom: 36px;
+            transform: translateX(-50%);
+            z-index: 10;
+            display: flex;
+            gap: 13px;
+        }
+        .hero-dot {
+            width: 16px; height: 16px;
+            border-radius: 50%;
+            background: #fff6;
+            border: 2px solid #f7c873;
+            transition: background .2s;
+            cursor: pointer;
+        }
+        .hero-dot.active {
+            background: #f7c873;
+        }
+        @media (max-width: 700px) {
+            .hero-logo { width: 92vw;}
+            .hero-title { font-size: 1.22rem; }
+        }
+    </style>	
+</head>
+<body>
+    <div class="top-wave"></div>
+    <!-- Header -->
+    <header class="header full-box">
+        <div class="header-brand full-box" style="display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 0 24px;">
+            <div>
+                <a href="index.html">
+                    <img src="./assets/img/logo.png" alt="logo" class="img-fluid" style="max-height: 60px;">
+                </a>
+            </div>
+            <div style="font-family: 'Never Settle', serif; color:#f7c873; font-size:2rem; letter-spacing: 2px;">
+                . Katana Sushi
+            </div>
+            <nav class="header-navbar full-box poppins-regular font-weight-bold" style="margin-left:auto;">
+                <ul class="list-unstyled full-box" style="display: flex; gap: 1.5rem; align-items: center; margin-bottom: 0;">
+                    <li>
+                        <a href="index.html">Inicio</a>
+                    </li>
+                    <li>
+                        <a href="menu.html">Menú</a>
+                    </li>
+                    <li>
+                        <span class="header-button btn-login-menu" style="position:relative;">
+                            <i class="fas fa-user-alt" onclick="show_popup_login()" data-mdb-toggle="tooltip" data-mdb-placement="bottom" title="Login" style="cursor:pointer;"></i>
+                            <!-- POPUP LOGIN/USUARIO -->
+                            <div class="div-bordered popup-login" id="popup-login" style="display:none;">
+                                <div class="login-title" id="popup-login-title">INICIAR SESIÓN</div>
+                                <form class="full-box" id="loginForm">
+                                    <div class="form-outline mb-3">
+                                        <input type="email" class="form-control" name="login_email_cliente" id="login_email" maxlength="70" required placeholder="Email">
+                                    </div>
+                                    <div class="form-outline mb-3">
+                                        <input type="password" class="form-control" name="login_clave_cliente" id="login_password" pattern="[a-zA-Z0-9$@.-]{7,100}" maxlength="100" required placeholder="Contraseña">
+                                    </div>
+                                    <button type="submit" class="btn btn-info btn-sm w-100" style="margin-bottom:8px;">Iniciar sesión</button>
+                                    <div id="login-msg" style="font-size:.97rem;color:#b21f1f;text-align:center;margin-top:2px;"></div>
+                                </form>
+                                <div id="user-info" style="display:none;">
+                                    <div style="text-align:center;">
+                                        <span style="font-size:1.3rem;font-weight:bold;" id="user-nombre"></span>
+                                        <br>
+                                        <span style="font-size:.95rem;color:#666;" id="user-email"></span>
+                                        <br>
+                                        <span class="badge bg-success" id="user-rol"></span>
+                                    </div>
+                                    <hr>
+                                    <div id="admin-panel-link" style="display:none; text-align:center;">
+                                        <a href="admin.html" class="btn btn-warning btn-block mb-2">Panel administrador</a>
+                                    </div>
+                                    <div id="pedidos-link" style="display:none; text-align:center;">
+                                        <a href="pedidos.html" class="btn btn-info btn-block mb-2">Mis pedidos</a>
+                                    </div>
+                                    <button class="btn btn-danger btn-block w-100" onclick="logout()" style="margin-top:8px;">Cerrar sesión</button>
+                                </div>
+                                <hr id="login-separator">
+                                <p class="text-center mb-1" id="register-link" style="font-size:.95rem;">¿No tienes cuenta? <a href="registration.html">Regístrate aquí</a></p>
+                            </div>
+                        </span>
+                    </li>
+                    <li>
+                        <a href="bag.html" class="header-button text-center" data-mdb-toggle="tooltip" data-mdb-placement="bottom" title="Carrito" style="position:relative;">
+                            <i class="fas fa-shopping-bag"></i>
+                            <span class="badge bg-warning rounded-pill bag-count" style="position:absolute;top:-8px;right:-15px;">2</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+	
+    <!-- HERO SLIDER -->
+    <section class="hero-slider" id="hero-slider">
+        <div class="hero-slide active" style="background-image: url('./assets/img/banner_1.jpg');"></div>
+        <div class="hero-slide" style="background-image: url('./assets/img/banner_2.jpg');"></div>
+        <div class="hero-slide" style="background-image: url('./assets/img/banner_3.jpg');"></div>
+        <div class="hero-slide" style="background-image: url('./assets/img/banner_2.jpg');"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="banner">
+                <div class="banner-body">
+                    <img src="./assets/img/logo.png" alt="logo">
+                    <div class="main-banner-title">
+                        ¡Disfruta Japón en cada bocado!
+                    </div>
+                    <div class="main-banner-sub">
+                        寿司・和食
+                    </div>
+                    <div style="text-align:center;margin-top:7px;font-size:1.15rem;color:#b21f1f;font-family:'Noto Serif JP',serif;">
+                        Contáctanos por Whatsapp para pedir por encargo
+                    </div>
+                    <a href="menu.html" class="btn btn-warning"><i class="fas fa-hamburger fa-fw"></i> &nbsp; Ir al menú</a>
+                </div>
+            </div>
+        </div>
+        <div class="hero-dots" id="hero-dots"></div>
+    </section>
+
+    <div style="height: 60px;"></div>
+
+    <section class="services-section container container-web-page">
+      <h3 class="text-center text-uppercase poppins-regular font-weight-bold" style="letter-spacing:1px;">Nuestros servicios</h3>
+      <div class="services-cards-row">
+        <div class="service-card">
+          <div class="service-icon"><i class="fas fa-shipping-fast"></i></div>
+          <div class="service-title">Pedido por Encargo</div>
+          <div class="service-desc">¿Buscás algo especial? Llámanos al Whatsapp y podés solicitar exactamente lo que querés. Hacelo con anticipación y nosotros nos encargamos del resto, asegurando frescura y calidad en cada pedido.</div>
+        </div>
+        <div class="service-card">
+          <div class="service-icon"><i class="fas fa-utensils"></i></div>
+          <div class="service-title">Comida de Calidad</div>
+          <div class="service-desc">Nos comprometemos con la excelencia en cada plato. Utilizamos ingredientes frescos, seleccionados con cuidado, y seguimos procesos que garantizan sabor, higiene y presentación tradicional japonesa.</div>
+        </div>
+        <div class="service-card">
+          <div class="service-icon"><i class="fas fa-shopping-cart"></i></div>
+          <div class="service-title">Carrito de Compra</div>
+          <div class="service-desc">Tu experiencia de compra debe ser rápida y segura. En el carrito podés revisar, modificar o eliminar productos antes de confirmar tu pedido. Te damos el control total de tu compra.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-section container container-web-page" style="margin-top:40px; margin-bottom:40px;">
+      <h3 class="text-center text-uppercase poppins-regular font-weight-bold" style="letter-spacing:1px;">Sobre Nosotros</h3>
+      <div class="row" style="margin-top:28px;">
+        <div class="col-md-4 mb-4">
+          <div class="about-card shadow-1-strong" style="background:linear-gradient(135deg,#fff7,#f7c87333); border-radius:18px; padding:32px 26px; height:100%; box-shadow:0 6px 32px #0002; border:2px solid #f7c87355;">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+              <span style="font-size:2.1rem;color:#b21f1f;"><i class="fas fa-eye"></i></span>
+              <h4 class="font-weight-bold mb-0" style="color:#b21f1f;">Visión</h4>
+            </div>
+            <p style="font-size:1.09rem;line-height:1.6;color:#222;">La visión de <b>Katana Sushi C.A.</b> es convertirse en la principal referencia de comida japonesa en Montevideo, destacándose por su calidad, innovación y excelencia en el servicio. Su meta es expandirse y fortalecer su presencia en el mercado, utilizando estrategias digitales que le permitan llegar a más clientes y optimizar su operatividad en un entorno cada vez más competitivo.</p>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="about-card shadow-1-strong" style="background:linear-gradient(135deg,#fff7,#f7c87333); border-radius:18px; padding:32px 26px; height:100%; box-shadow:0 6px 32px #0002; border:2px solid #f7c87355;">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+              <span style="font-size:2.1rem;color:#b21f1f;"><i class="fas fa-bullseye"></i></span>
+              <h4 class="font-weight-bold mb-0" style="color:#b21f1f;">Misión</h4>
+            </div>
+            <p style="font-size:1.09rem;line-height:1.6;color:#222;">La misión de <b>Katana Sushi C.A.</b> es brindar a sus clientes una experiencia gastronómica inigualable, basada en la calidad, la frescura y la autenticidad de sus productos. A través de la innovación y la implementación de nuevas tecnologías, busca facilitar el acceso a sus productos y mejorar la atención al cliente, garantizando rapidez y eficiencia en cada pedido.</p>
+          </div>
+        </div>
+        <div class="col-md-4 mb-4">
+          <div class="about-card shadow-1-strong" style="background:linear-gradient(135deg,#fff7,#f7c87333); border-radius:18px; padding:32px 26px; height:100%; box-shadow:0 6px 32px #0002; border:2px solid #f7c87355;">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+              <span style="font-size:2.1rem;color:#b21f1f;"><i class="fas fa-history"></i></span>
+              <h4 class="font-weight-bold mb-0" style="color:#b21f1f;">Reseña Histórica</h4>
+            </div>
+            <p style="font-size:1.09rem;line-height:1.6;color:#222;">Katana Sushi C.A es una empresa reciente ubicada en el barrio Buceo de Montevideo, Uruguay. Fundada en febrero de 2024, surge como respuesta a la creciente demanda de opciones gastronómicas de alta calidad en la categoría de sushi y comida japonesa. A pesar de ser una empresa joven, Katana Sushi ha logrado posicionarse como un negocio local innovador, comprometido con la frescura de sus ingredientes y la atención al cliente, ganándose rápidamente la preferencia de los amantes del sushi en la región.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="platillos-section container-fluid container-web-page">
+      <div class="platillos-title">Nuestros platillos más populares</div>
+      <div class="container-cards full-box">
+        <div class="card shadow-1-strong">
+          <img class="card-img-top" src="./assets/platillos/platillo.jpg" alt="nombre_platillo">
+          <div class="card-body text-center">
+            <h5 class="card-title font-weight-bold">Sushi Especial Katana</h5>
+            <p class="card-text lead"><span class="badge bg-secondary">$25.00 USD</span></p>
+          </div>
+          <div class="card-body text-center">
+            <button type="button" class="btn btn-success btn-sm"><i class="fas fa-shopping-bag fa-fw"></i> &nbsp; Agregar</button>
+            &nbsp; &nbsp;
+            <a href="details.html" class="btn btn-info btn-sm"><i class="fas fa-utensils fa-fw"></i> &nbsp; Detalles</a>
+          </div>
+        </div>
+        <div class="card shadow-1-strong">
+          <img class="card-img-top" src="./assets/img/img_not_found.jpg" alt="nombre_platillo">
+          <div class="card-body text-center">
+            <h5 class="card-title font-weight-bold">Tempura Clásico</h5>
+            <p class="card-text lead"><span class="badge bg-secondary">$25.00 USD</span></p>
+          </div>
+          <div class="card-body text-center">
+            <button type="button" class="btn btn-success btn-sm"><i class="fas fa-shopping-bag fa-fw"></i> &nbsp; Agregar</button>
+            &nbsp; &nbsp;
+            <a href="details.html" class="btn btn-info btn-sm"><i class="fas fa-utensils fa-fw"></i> &nbsp; Detalles</a>
+          </div>
+        </div>
+        <div class="card shadow-1-strong">
+          <img class="card-img-top" src="./assets/platillos/platillo.jpg" alt="nombre_platillo">
+          <div class="card-body text-center">
+            <h5 class="card-title font-weight-bold">Ramen Tradicional</h5>
+            <p class="card-text lead"><span class="badge bg-secondary">$25.00 USD</span></p>
+          </div>
+          <div class="card-body text-center">
+            <button type="button" class="btn btn-success btn-sm"><i class="fas fa-shopping-bag fa-fw"></i> &nbsp; Agregar</button>
+            &nbsp; &nbsp;
+            <a href="details.html" class="btn btn-info btn-sm"><i class="fas fa-utensils fa-fw"></i> &nbsp; Detalles</a>
+          </div>
+        </div>
+      </div>
+      <br>
+      <p class="text-center"><a href="menu.html" class="btn btn-primary"><i class="fas fa-hamburger fa-fw"></i> &nbsp; Ir al menú</a></p>
+    </section>
+
+    <section class="crea-cuenta-section">
+      <div class="cuenta-card">
+        <img src="./assets/img/registration.png" alt="registration" class="img-fluid">
+        <h3 class="text-center text-uppercase poppins-regular font-weight-bold">Crea tu cuenta</h3>
+        <p class="text-justify">
+          Regístrate en pocos pasos y empezá a disfrutar de todos los beneficios. Guarda tus pedidos, seguí tus compras y accedé a promociones exclusivas solo para usuarios registrados.
+        </p>
+        <a href="registration.html" class="btn btn-primary">Crear cuenta</a>
+      </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-4">
+                    <div class="kanji-sushi"></div>
+                    <ul class="list-unstyled">
+                        <li><h5 class="font-weight-bold"><i class="far fa-copyright"></i> Angel Febres 2024</h5></li>
+                        <li> Copyright© </li>
+                    </ul>
+                </div>
+                <div class="col-12 col-md-4">
+                    <ul class="list-unstyled">
+                        <li><h5 class="font-weight-bold">Montevideo</h5></li>
+                        <li><i class="fas fa-map-marker-alt fa-fw"></i> Pedro Bustamante 1861, Buceo - Montevideo</li>
+                    </ul>
+                </div>
+                <div class="col-12 col-md-4">
+                    <ul class="list-unstyled">
+                        <li><h5 class="font-weight-bold">Síguenos en:</h5> </li>
+                        <li>
+                            <a href="https://www.instagram.com/katana_sushi.uy/" class="footer-link" target="_blank">
+                                <i class="fab fa-instagram fa-fw"></i> Instagram
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="text-center" style="font-family:'Sawarabi Mincho',serif;font-size:1.1rem;opacity:0.65;">
+                ¡Gracias por tu preferencia!
+            </div>
+        </div>
+    </footer>
+    <div class="bottom-wave"></div>
+    <script src="./js/mdb.min.js"></script>
+    <script src="./js/main.js"></script>
+    <script src="./js/index-platillos.js"></script>
+    <script>
+    // SLIDER con transiciones suaves
+    const slides = document.querySelectorAll('.hero-slide');
+    const dotsContainer = document.getElementById('hero-dots');
+    let current = 0, timer;
+
+    function showSlide(idx) {
+        slides.forEach((slide, i) => {
+            slide.classList.toggle('active', i === idx);
+            if(dotsContainer.children[i]) {
+                dotsContainer.children[i].classList.toggle('active', i === idx);
+            }
+        });
+        current = idx;
+    }
+
+    function nextSlide() {
+        let next = (current + 1) % slides.length;
+        showSlide(next);
+    }
+
+    // Crear puntitos
+    slides.forEach((_, i) => {
+        const dot = document.createElement('div');
+        dot.className = 'hero-dot' + (i === 0 ? ' active' : '');
+        dot.onclick = () => {
+            showSlide(i);
+            resetSlider();
+        };
+        dotsContainer.appendChild(dot);
+    });
+
+    function resetSlider() {
+        clearInterval(timer);
+        timer = setInterval(nextSlide, 5700);
+    }
+
+    resetSlider();
+
+    document.getElementById('hero-slider').addEventListener('mouseenter', () => clearInterval(timer));
+    document.getElementById('hero-slider').addEventListener('mouseleave', resetSlider);
+
+    // --- LOGIN Y CUENTA ---
+    function show_popup_login() {
+        var popup = document.getElementById('popup-login');
+        popup.style.display = (popup.style.display === "block") ? "none" : "block";
+        setTimeout(function() {
+            document.addEventListener('mousedown', handler);
+        }, 0);
+        function handler(e) {
+            if (!popup.contains(e.target) && !e.target.classList.contains('fa-user-alt')) {
+                popup.style.display = "none";
+                document.removeEventListener('mousedown', handler);
+            }
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        actualizarPopupLogin();
+    });
+
+    function actualizarPopupLogin() {
+        const user = JSON.parse(localStorage.getItem('usuario'));
+        const loginForm = document.getElementById('loginForm');
+        const userInfo = document.getElementById('user-info');
+        const loginTitle = document.getElementById('popup-login-title');
+        const loginSeparator = document.getElementById('login-separator');
+        const registerLink = document.getElementById('register-link');
+        if (user) {
+            // Oculta formulario de login, muestra info usuario
+            loginForm.style.display = 'none';
+            loginTitle.textContent = 'MI CUENTA';
+            userInfo.style.display = '';
+            loginSeparator.style.display = '';
+            registerLink.style.display = 'none';
+            document.getElementById('user-nombre').textContent = user.nombre + ' ' + (user.apellido || '');
+            document.getElementById('user-email').textContent = user.email;
+            document.getElementById('user-rol').textContent = user.rol === 'admin' ? 'Administrador' : 'Cliente';
+            document.getElementById('user-rol').className = user.rol === 'admin' ? 'badge bg-warning' : 'badge bg-success';
+            document.getElementById('admin-panel-link').style.display = user.rol === 'admin' ? '' : 'none';
+            document.getElementById('pedidos-link').style.display = user.rol !== 'admin' ? '' : 'none';
+        } else {
+            // Muestra login, oculta info usuario
+            loginForm.style.display = '';
+            loginTitle.textContent = 'INICIAR SESIÓN';
+            userInfo.style.display = 'none';
+            loginSeparator.style.display = '';
+            registerLink.style.display = '';
+            document.getElementById('register-link').style.display = '';
+            document.getElementById('login-msg').textContent = '';
+        }
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const email = document.getElementById('login_email').value.trim();
+        const password = document.getElementById('login_password').value.trim();
+        const msg = document.getElementById('login-msg');
+        msg.textContent = "Procesando...";
+        try {
+            const res = await fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            const data = await res.json();
+            if (res.ok && data.success) {
+                msg.textContent = '';
+                localStorage.setItem('usuario', JSON.stringify(data.usuario));
+                actualizarPopupLogin();
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Bienvenido!',
+                    text: `Hola, ${data.usuario.nombre}!`,
+                    timer: 1700,
+                    showConfirmButton: false
+                });
+                setTimeout(() => {
+                    document.getElementById('popup-login').style.display = "none";
+                }, 1300);
+            } else {
+                msg.textContent = data.message || "Usuario o contraseña incorrectos.";
+            }
+        } catch (err) {
+            msg.textContent = "Error de conexión con el servidor.";
+        }
+    });
+
+    function logout() {
+        localStorage.removeItem('usuario');
+        actualizarPopupLogin();
+        Swal.fire({
+            icon: 'info',
+            title: 'Has cerrado sesión',
+            timer: 1200,
+            showConfirmButton: false
+        });
+    }
+
+    document.getElementById('admin-panel-link').addEventListener('click', function(e) {
+        e.preventDefault();
+        window.location.href = 'admin.html';
+    });
+
+    // --- CONTADOR DINÁMICO DEL CARRITO ---
+    function actualizarContadorCarrito() {
+        let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+        let total = carrito.reduce((sum, p) => sum + p.cantidad, 0);
+        document.querySelectorAll('.bag-count').forEach(el => el.textContent = total);
+    }
+    document.addEventListener('DOMContentLoaded', actualizarContadorCarrito);
+    </script>
+</body>
+</html>

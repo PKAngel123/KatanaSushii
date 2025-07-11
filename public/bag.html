@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>Carrito | Katana Sushi</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="./css/normalize.css">
+    <link rel="stylesheet" href="./css/mdb.min.css">
+    <link rel="stylesheet" href="./css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Sawarabi+Mincho&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="icon.png">
+    <style>
+        @font-face {
+            font-family: 'Never Settle';
+            src: url('./webfonts/Never-Settle.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        body { background: #111;}
+        .header-platillos { background: #9e2121; width: 100vw; min-height: 62px; position: relative; border-bottom: 5px solid #f7c873; z-index: 20;}
+        .header-platillos-bar { display: flex; align-items: center; justify-content: space-between; padding: 0 32px; min-height: 62px; font-family: 'Sawarabi Mincho', serif;}
+        .header-logo-jp { display: flex; align-items: center; gap: 18px;}
+        .header-logo-jp img { background: #f7c873; border-radius: 50%; border: 4px solid #fff4; width: 54px; height: 54px; object-fit: cover;}
+        .header-logo-jp span { color: #f7c873; font-size: 2rem; letter-spacing: 4px; font-family: 'Sawarabi Mincho', serif; font-weight: 400; margin-left: 6px;}
+        .header-platillos-nav { display: flex; align-items: center; gap: 26px; font-family: 'Noto Serif JP', serif; font-size: 1.13rem;}
+        .header-platillos-nav a { color: #fff; font-weight: 600; text-decoration: none; transition: color 0.13s; letter-spacing: 1.2px; font-family: 'Noto Serif JP', serif;}
+        .header-platillos-nav a.active, .header-platillos-nav a.menu-active { color: #f7c873;}
+        .header-platillos-nav .header-ico-btn { background: none; border: none; padding: 0 4px; color: #fff; font-size: 1.28rem;}
+        .header-bag-link { position: relative; display: inline-block;}
+        .header-bag-badge { position: absolute; top: -5px; right: -11px; background: #f7c873; color: #fff; font-size: 0.85rem; font-family: 'Noto Serif JP', serif; font-weight: 700; border-radius: 50%; padding: 2.5px 6px; z-index: 2;}
+        .header-platillos-curve { position: relative; width: 100vw; height: 36px;}
+        .header-platillos-curve-shape { position: absolute; left: 50%; transform: translateX(-50%); width: 72px; height: 23px; background: #f7c873; border-radius: 0 0 18px 18px; box-shadow: 0 4px 15px #0004; top: 13px; z-index: 22;}
+        .main-bg-black { background: #181818; min-height: 100vh; width: 100vw; margin-top: 0; padding-bottom: 40px;}
+        .register-main-centered { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; align-items: center;}
+        .bag-title { color: #fff; font-family: 'Sawarabi Mincho', serif; margin-top: 24px; margin-bottom: 22px; font-size: 2.2rem; font-weight: bold;}
+        .bag-table { background: #23201c; border-radius: 18px; box-shadow: 0 4px 32px #0003; width: 100%; color: #fff; border-collapse: separate; border-spacing: 0;}
+        .bag-table th, .bag-table td { padding: 16px 10px; font-size: 1.04rem; font-family: 'Noto Serif JP', serif;}
+        .bag-table th { color: #f7c873; font-family: 'Sawarabi Mincho', serif; font-size: 1.09rem; border-bottom: 2px solid #f7c87355;}
+        .bag-table tr:not(:last-child) td { border-bottom: 1px solid #333;}
+        .bag-table img { width: 62px; height: 62px; border-radius: 11px; object-fit: cover; border: 2px solid #f7c87355;}
+        .bag-actions { display: flex; gap: 10px; }
+        .bag-actions button { border: none; background: #e74c3c; color: #fff; border-radius: 8px; font-size: 1rem; padding: 6px 15px; cursor: pointer; transition: background .2s;}
+        .bag-actions button:hover { background: #c0392b; }
+        .bag-summary { background: #23201c; color: #fff; border-radius: 14px; margin-top: 28px; padding: 32px 22px; font-family: 'Noto Serif JP', serif; box-shadow: 0 4px 32px #0003; font-size: 1.15rem; width: 100%; max-width: 400px;}
+        .bag-summary-title { color: #f7c873; font-family: 'Sawarabi Mincho', serif; font-size: 1.25rem; font-weight: bold; margin-bottom: 16px;}
+        .bag-summary-detail { display: flex; justify-content: space-between; margin-bottom: 7px;}
+        .bag-summary-total { color: #fff; font-size: 1.23rem; font-family: 'Sawarabi Mincho', serif; font-weight: bold; margin-top: 16px; display: flex; justify-content: space-between;}
+        .btn-checkout { background: linear-gradient(90deg, #27ae60 80%, #145c32 100%); color: #fff; border: none; border-radius: 8px; padding: 12px 36px; font-size: 1.09rem; font-family: 'Sawarabi Mincho', serif; font-weight: 700; margin: 20px 0 0 0; transition: background .2s;}
+        .btn-checkout:hover { background: #1e7049; }
+        .footer { background: linear-gradient(180deg, #2d2321 60%, #61402b 100%); border-top: 5px solid #f7c873; color: #fff; margin-top: 0; font-family: 'Noto Serif JP', serif; padding: 32px 0 8px 0;}
+        .footer .kanji-sushi { font-size: 2.4rem; color: #f7c873; font-family: 'Sawarabi Mincho', serif; margin-bottom: 10px;}
+        .footer ul { padding-left: 0; list-style: none;}
+        .footer h5 { color: #fff; font-family: 'Noto Serif JP', serif; margin-top: 0; margin-bottom: .6rem; font-size: 1.13rem;}
+        .footer-link { color: #f7c873; text-decoration: none; transition: color .2s;}
+        .footer-link:hover { color: #fff;}
+        .footer .text-center { font-family:'Sawarabi Mincho',serif; font-size:1.1rem; opacity:0.65; margin-top: 16px;}
+        .bottom-wave { width: 100vw; height: 24px; background: #181818; position: relative; z-index: 4; border-top-left-radius: 18px; border-top-right-radius: 18px; margin-top: -10px;}
+        @media (max-width: 900px) {
+            .bag-table th, .bag-table td { font-size: .97rem; padding: 11px 4px;}
+            .bag-table img { width: 40px; height: 40px;}
+            .register-main-centered { max-width: 98vw; }
+        }
+        @media (max-width: 700px) {
+            .header-platillos-bar { flex-direction: column; gap: 10px; padding: 0 4vw;}
+            .footer .col-md-4 { margin-bottom: 18px;}
+            .bag-summary { max-width: 98vw; }
+            .bag-title { font-size: 1.55rem;}
+        }
+    </style>
+</head>
+<body>
+      <!-- HEADER -->
+    <header class="header full-box">
+        <div class="header-brand full-box" style="display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 0 24px;">
+            <div>
+                <a href="index.html">
+                    <img src="./assets/img/logo.png" alt="logo" class="img-fluid" style="max-height: 60px;">
+                </a>
+            </div>
+            <div style="font-family: 'Never Settle', serif; color:#f7c873; font-size:2rem; letter-spacing: 2px;">
+                . Katana Sushi
+            </div>
+            <nav class="header-navbar full-box poppins-regular font-weight-bold" style="margin-left:auto;">
+                <ul class="list-unstyled full-box" style="display: flex; gap: 1.5rem; align-items: center; margin-bottom: 0;">
+                    <li>
+                        <a href="index.html">Inicio</a>
+                    </li>
+                    <li>
+                        <a href="menu.html" style="color:#f7c873;">Menú</a>
+                    </li>
+                    <li>
+                        <span class="header-button btn-login-menu" style="position:relative;">
+                            <i class="fas fa-user-alt" onclick="show_popup_login()" style="cursor:pointer;"></i>
+                            <div class="div-bordered popup-login">
+                                <div class="login-title">INICIAR SESIÓN</div>
+                                <form class="full-box" action="">
+                                    <div class="form-outline mb-3">
+                                        <input type="email" class="form-control" name="login_email_cliente" id="login_email" maxlength="70" required="" placeholder="Email">
+                                    </div>
+                                    <div class="form-outline mb-3">
+                                        <input type="password" class="form-control" name="login_clave_cliente" id="login_password" pattern="[a-zA-Z0-9$@.-]{7,100}" maxlength="100" required="" placeholder="Contraseña">
+                                    </div>
+                                    <button class="btn btn-info btn-sm w-100" style="margin-bottom:8px;">Iniciar sesión</button>
+                                </form>
+                                <hr>
+                                <p class="text-center mb-1" style="font-size:.95rem;">¿No tienes cuenta? <a href="registration.html">Regístrate aquí</a></p>
+                            </div>
+                        </span>
+                    </li>
+                    <li>
+                        <a href="bag.html" class="header-button text-center" title="Carrito" style="position:relative;">
+                            <i class="fas fa-shopping-bag"></i>
+                            <span class="badge bg-warning rounded-pill bag-count" style="position:absolute;top:-8px;right:-15px;">2</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <div class="main-bg-black">
+        <main class="register-main-centered">
+            <div class="bag-title">TU CARRITO</div>
+            <table class="bag-table">
+                <thead>
+                    <tr>
+                        <th>Platillo</th>
+                        <th>Nombre</th>
+                        <th>Cantidad</th>
+                        <th>Precio unitario</th>
+                        <th>Subtotal</th>
+                        <th>Quitar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><img src="./assets/platillos/platillo.jpg" alt="Sushi Katana"></td>
+                        <td>Sushi Especial Katana</td>
+                        <td>2</td>
+                        <td>$25.00</td>
+                        <td>$50.00</td>
+                        <td class="bag-actions">
+                            <button title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><img src="./assets/img/img_not_found.jpg" alt="Tempura"></td>
+                        <td>Tempura Clásico</td>
+                        <td>1</td>
+                        <td>$18.00</td>
+                        <td>$18.00</td>
+                        <td class="bag-actions">
+                            <button title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="bag-summary">
+                <div class="bag-summary-title">Resumen de compra</div>
+                <div class="bag-summary-detail"><span>Subtotal</span> <span>$68.00</span></div>
+                <div class="bag-summary-detail"><span>Envío</span> <span>$3.00</span></div>
+                <div class="bag-summary-total"><span>Total</span> <span>$71.00</span></div>
+                <button class="btn-checkout"><i class="fas fa-credit-card"></i> FINALIZAR COMPRA</button>
+            </div>
+        </main>
+    </div>
+    <footer class="footer" style="margin-top:60px;">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-4">
+                    <div class="kanji-sushi"></div>
+                    <ul class="list-unstyled">
+                        <li><h5 class="font-weight-bold"><i class="far fa-copyright"></i> Angel Febres 2024</h5></li>
+                        <li> Copyright© </li>
+                    </ul>
+                </div>
+                <div class="col-12 col-md-4">
+                    <ul class="list-unstyled">
+                        <li><h5 class="font-weight-bold">Montevideo</h5></li>
+                        <li><i class="fas fa-map-marker-alt fa-fw"></i> Pedro Bustamante 1861, Buceo - Montevideo</li>
+                    </ul>
+                </div>
+                <div class="col-12 col-md-4">
+                    <ul class="list-unstyled">
+                        <li><h5 class="font-weight-bold">Síguenos en:</h5> </li>
+                        <li>
+                            <a href="https://www.instagram.com/katana_sushi.uy/" class="footer-link" target="_blank">
+                                <i class="fab fa-instagram fa-fw"></i> Instagram
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="text-center" style="font-family:'Sawarabi Mincho',serif;font-size:1.1rem;opacity:0.65;">
+                ¡Gracias por tu preferencia!
+            </div>
+        </div>
+    </footer>
+    <div class="bottom-wave"></div>
+    <script>
+      function show_popup_login() {
+        var popup = document.querySelector('.popup-login');
+        popup.style.display = (popup.style.display === "block") ? "none" : "block";
+        setTimeout(function() {
+          document.addEventListener('mousedown', handler);
+        }, 0);
+        function handler(e) {
+          if (!popup.contains(e.target) && !e.target.classList.contains('fa-user-alt')) {
+            popup.style.display = "none";
+            document.removeEventListener('mousedown', handler);
+          }
+        }
+      }
+    </script>
+    <script src="./js/bag.js"></script>
+</body>
+</html>

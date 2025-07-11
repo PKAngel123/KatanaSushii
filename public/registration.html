@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>Crear Cuenta | Katana Sushi</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="./css/normalize.css">
+    <link rel="stylesheet" href="./css/mdb.min.css">
+    <link rel="stylesheet" href="./css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Sawarabi+Mincho&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="icon.png">
+    <style>
+        @font-face {
+            font-family: 'Never Settle';
+            src: url('./webfonts/Never-Settle.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        body {
+            background: #111;
+        }
+        /* HEADER ESTILO MENÚ */
+        .header-platillos {
+            background: #9e2121;
+            width: 100vw;
+            min-height: 62px;
+            position: relative;
+            border-bottom: 5px solid #f7c873;
+            z-index: 20;
+        }
+        .header-platillos-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            min-height: 62px;
+            font-family: 'Sawarabi Mincho', serif;
+        }
+        .header-logo-jp {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+        .header-logo-jp img {
+            background: #f7c873;
+            border-radius: 50%;
+            border: 4px solid #fff4;
+            width: 54px;
+            height: 54px;
+            object-fit: cover;
+        }
+        .header-logo-jp span {
+            color: #f7c873;
+            font-size: 2rem;
+            letter-spacing: 4px;
+            font-family: 'Sawarabi Mincho', serif;
+            font-weight: 400;
+            margin-left: 6px;
+        }
+        .header-platillos-nav {
+            display: flex;
+            align-items: center;
+            gap: 26px;
+            font-family: 'Noto Serif JP', serif;
+            font-size: 1.13rem;
+        }
+        .header-platillos-nav a {
+            color: #fff;
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.13s;
+            letter-spacing: 1.2px;
+            font-family: 'Noto Serif JP', serif;
+        }
+        .header-platillos-nav a.active, .header-platillos-nav a.menu-active {
+            color: #f7c873;
+        }
+        .header-platillos-nav .header-ico-btn {
+            background: none;
+            border: none;
+            padding: 0 4px;
+            color: #fff;
+            font-size: 1.28rem;
+        }
+        .header-bag-link {
+            position: relative;
+            display: inline-block;
+        }
+        .header-bag-badge {
+            position: absolute;
+            top: -5px;
+            right: -11px;
+            background: #f7c873;
+            color: #fff;
+            font-size: 0.85rem;
+            font-family: 'Noto Serif JP', serif;
+            font-weight: 700;
+            border-radius: 50%;
+            padding: 2.5px 6px;
+            z-index: 2;
+        }
+        .header-platillos-curve {
+            position: relative;
+            width: 100vw;
+            height: 36px; /* incrementada para que entre la curva */
+        }
+        .header-platillos-curve-shape {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 72px;
+            height: 23px;
+            background: #f7c873;
+            border-radius: 0 0 18px 18px;
+            box-shadow: 0 4px 15px #0004;
+            top: 13px; /* BAJADO para que quede alineado como en platillos */
+            z-index: 22;
+        }
+        /* Fondo negro igual que menú */
+        .main-bg-black {
+            background: #181818;
+            min-height: 100vh;
+            width: 100vw;
+            margin-top: 0;
+            padding-bottom: 40px;
+        }
+
+        /* --- REGISTRATION FORM --- */
+        .register-main-centered {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .register-title {
+            color: #fff;
+            font-family: 'Sawarabi Mincho', serif;
+            margin-top: 18px;
+            margin-bottom: 14px;
+            font-size: 2.2rem;
+            font-weight: bold;
+            width: 100%;
+        }
+        .register-desc {
+            color: #eee;
+            font-family: 'Noto Serif JP', serif;
+            font-size: 1.09rem;
+            margin-bottom: 35px;
+            max-width: 1100px;
+            width: 100%;
+        }
+        .register-form-section {
+            background: #181818;
+            border: 1.5px solid #f7c87366;
+            border-radius: 16px;
+            padding: 36px 36px 24px 36px;
+            margin: 0 auto 48px auto;
+            width: 100%;
+            max-width: 1100px;
+            color: #fff;
+            font-family: 'Noto Serif JP', serif;
+            box-sizing: border-box;
+            box-shadow: 0 8px 36px #0003;
+        }
+        .register-form-section legend {
+            font-size: 1.18rem;
+            font-family: 'Sawarabi Mincho', serif;
+            font-weight: bold;
+            color: #f7c873;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .register-form-section fieldset {
+            border: none;
+            margin-bottom: 28px;
+            padding: 0;
+        }
+        .register-form-section label {
+            color: #eee;
+            font-size: 1rem;
+            font-family: 'Noto Serif JP', serif;
+        }
+        .register-form-section input,
+        .register-form-section select {
+            background: #191919;
+            border: 1.2px solid #f7c87399;
+            color: #eee;
+            border-radius: 7px;
+            font-size: 1rem;
+            padding: 8px 13px;
+            margin-bottom: 18px;
+            width: 100%;
+            font-family: 'Noto Serif JP', serif;
+            transition: border-color 0.2s;
+        }
+        .register-form-section input:focus,
+        .register-form-section select:focus {
+            border-color: #f7c873;
+            outline: none;
+        }
+        .register-form-section .row {
+            display: flex;
+            gap: 18px;
+            margin-bottom: 0;
+        }
+        .register-form-section .row > div {
+            flex: 1 1 0;
+        }
+        .register-form-section .icon-required {
+            color: #f7c873;
+            margin-left: 5px;
+            font-size: 1rem;
+            vertical-align: middle;
+        }
+        .register-form-section .form-actions {
+            text-align: center;
+            margin-top: 18px;
+        }
+        .register-form-section .btn-primary {
+            background: #14b7e7;
+            color: #fff;
+            border: none;
+            font-family: 'Sawarabi Mincho', serif;
+            font-size: 1.05rem;
+            border-radius: 6px;
+            padding: 10px 28px;
+            transition: background .2s;
+            font-weight: 700;
+            letter-spacing: 1.1px;
+            box-shadow: 0 4px 16px #14b7e736;
+        }
+        .register-form-section .btn-primary:hover {
+            background: #0f8ab6;
+        }
+        @media (max-width: 1000px) {
+            .register-form-section {
+                padding: 26px 8vw 18px 8vw;
+            }
+            .register-main-centered { max-width: 100vw; }
+        }
+        @media (max-width: 700px) {
+            .register-form-section {
+                padding: 16px 2vw 12px 2vw;
+            }
+            .register-form-section .row {
+                flex-direction: column;
+                gap: 0;
+            }
+            .header-platillos-bar {
+                flex-direction: column;
+                gap: 10px;
+                padding: 0 4vw;
+            }
+        }
+    </style>
+</head>
+<body>
+     <!-- HEADER -->
+    <header class="header full-box">
+        <div class="header-brand full-box" style="display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 0 24px;">
+            <div>
+                <a href="index.html">
+                    <img src="./assets/img/logo.png" alt="logo" class="img-fluid" style="max-height: 60px;">
+                </a>
+            </div>
+            <div style="font-family: 'Never Settle', serif; color:#f7c873; font-size:2rem; letter-spacing: 2px;">
+                . Katana Sushi
+            </div>
+            <nav class="header-navbar full-box poppins-regular font-weight-bold" style="margin-left:auto;">
+                <ul class="list-unstyled full-box" style="display: flex; gap: 1.5rem; align-items: center; margin-bottom: 0;">
+                    <li>
+                        <a href="index.html">Inicio</a>
+                    </li>
+                    <li>
+                        <a href="menu.html" style="color:#f7c873;">Menú</a>
+                    </li>
+                    <li>
+                        <span class="header-button btn-login-menu" style="position:relative;">
+                            <i class="fas fa-user-alt" onclick="show_popup_login()" style="cursor:pointer;"></i>
+                            <div class="div-bordered popup-login">
+                                <div class="login-title">INICIAR SESIÓN</div>
+                                <form class="full-box" action="">
+                                    <div class="form-outline mb-3">
+                                        <input type="email" class="form-control" name="login_email_cliente" id="login_email" maxlength="70" required="" placeholder="Email">
+                                    </div>
+                                    <div class="form-outline mb-3">
+                                        <input type="password" class="form-control" name="login_clave_cliente" id="login_password" pattern="[a-zA-Z0-9$@.-]{7,100}" maxlength="100" required="" placeholder="Contraseña">
+                                    </div>
+                                    <button class="btn btn-info btn-sm w-100" style="margin-bottom:8px;">Iniciar sesión</button>
+                                </form>
+                                <hr>
+                                <p class="text-center mb-1" style="font-size:.95rem;">¿No tienes cuenta? <a href="registration.html">Regístrate aquí</a></p>
+                            </div>
+                        </span>
+                    </li>
+                    <li>
+                        <a href="bag.html" class="header-button text-center" title="Carrito" style="position:relative;">
+                            <i class="fas fa-shopping-bag"></i>
+                            <span class="badge bg-warning rounded-pill bag-count" style="position:absolute;top:-8px;right:-15px;">2</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <!-- FONDO NEGRO DE LA SECCIÓN PRINCIPAL -->
+    <div class="main-bg-black">
+        <main class="register-main-centered">
+            <div class="register-title">CREAR CUENTA</div>
+            <div class="register-desc">
+                Al crear una cuenta en nuestro sitio web usted acepta nuestros 
+                <a href="#" style="color:#14b7e7;text-decoration: underline">términos y condiciones</a>. 
+                La información introducida en el formulario debe de ser clara, precisa y legítima. 
+                Para crear una cuenta debe de llenar todos los campos que son obligatorios marcados con el icono 
+                <i class="fas fa-arrow-right icon-required"></i>
+            </div>
+            <form class="register-form-section"  id="registerForm">
+                <fieldset>
+                    <legend><i class="fas fa-id-card"></i> Información personal</legend>
+                    <div class="row">
+                        <div>
+                            <select name="tipo_documento" required>
+                                <option value="">Tipo de documento</option>
+                                <option value="ci">Cédula de Identidad</option>
+                                <option value="pasaporte">Pasaporte</option>
+                            </select>
+                        </div>
+                        <div>
+                            <input type="text" name="documento" placeholder="Número de documento" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div>
+                            <input type="text" name="nombre" placeholder="Nombres" required>
+                        </div>
+                        <div>
+                            <input type="text" name="apellido" placeholder="Apellidos" required>
+                        </div>
+                        <div>
+                            <input type="tel" name="telefono" placeholder="Teléfono (opcional)">
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend><i class="fas fa-map-marked-alt"></i> Información de envío</legend>
+                    <div class="row">
+                        <div>
+                            <input type="text" name="direccion" placeholder="Dirección" required>
+                        </div>
+                        <div>
+                            <input type="text" name="ciudad" placeholder="Ciudad" required>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend><i class="fas fa-user-friends"></i> Información de inicio de sesión</legend>
+                    <div class="row">
+                        <div>
+                            <input type="email" name="email" placeholder="Correo electrónico" required>
+                        </div>
+                        <div>
+                            <input type="password" name="clave" placeholder="Contraseña" required>
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> CREAR CUENTA
+                    </button>
+                </div>
+                <div class="msg" id="msg"></div>
+            </form>
+        </main>
+    </div>
+    <footer class="footer" style="margin-top:60px;">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-4">
+                    <div class="kanji-sushi"></div>
+                    <ul class="list-unstyled">
+                        <li><h5 class="font-weight-bold"><i class="far fa-copyright"></i> Angel Febres 2024</h5></li>
+                        <li> Copyright© </li>
+                    </ul>
+                </div>
+                <div class="col-12 col-md-4">
+                    <ul class="list-unstyled">
+                        <li><h5 class="font-weight-bold">Montevideo</h5></li>
+                        <li><i class="fas fa-map-marker-alt fa-fw"></i> Pedro Bustamante 1861, Buceo - Montevideo</li>
+                    </ul>
+                </div>
+                <div class="col-12 col-md-4">
+                    <ul class="list-unstyled">
+                        <li><h5 class="font-weight-bold">Síguenos en:</h5> </li>
+                        <li>
+                            <a href="https://www.instagram.com/katana_sushi.uy/" class="footer-link" target="_blank">
+                                <i class="fab fa-instagram fa-fw"></i> Instagram
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="text-center" style="font-family:'Sawarabi Mincho',serif;font-size:1.1rem;opacity:0.65;">
+                ¡Gracias por tu preferencia!
+            </div>
+        </div>
+    </footer>
+    <script>
+      function show_popup_login() {
+        var popup = document.querySelector('.popup-login');
+        popup.style.display = (popup.style.display === "block") ? "none" : "block";
+        setTimeout(function() {
+          document.addEventListener('mousedown', handler);
+        }, 0);
+        function handler(e) {
+          if (!popup.contains(e.target) && !e.target.classList.contains('fa-user-alt')) {
+            popup.style.display = "none";
+            document.removeEventListener('mousedown', handler);
+          }
+        }
+      }
+
+document.addEventListener('DOMContentLoaded', function() {
+  actualizarPopupLogin();
+  actualizarContadorCarrito();
+});
+
+function actualizarPopupLogin() {
+  const user = JSON.parse(localStorage.getItem('usuario'));
+  const popup = document.querySelector('.popup-login');
+  if (!popup) return;
+  if (user) {
+    popup.innerHTML = `<div class='login-title'>MI CUENTA</div>
+      <div style='text-align:center;'>
+        <span style='font-size:1.3rem;font-weight:bold;'>${user.nombre} ${(user.apellido||'')}</span><br>
+        <span style='font-size:.95rem;color:#666;'>${user.email}</span><br>
+        <span class='badge bg-success'>${user.rol==='admin'?'Administrador':'Cliente'}</span>
+      </div>
+      <hr>
+      <button class='btn btn-danger btn-block w-100' onclick='logoutRegistration()' style='margin-top:8px;'>Cerrar sesión</button>`;
+  }
+}
+window.logoutRegistration = function() {
+  localStorage.removeItem('usuario');
+  location.reload();
+}
+
+function actualizarContadorCarrito() {
+  let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+  let total = carrito.reduce((sum, p) => sum + p.cantidad, 0);
+  document.querySelectorAll('.bag-count').forEach(el => el.textContent = total);
+}
+    </script>
+    <script>
+document.getElementById('registerForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const form = e.target;
+  const msgDiv = document.getElementById('msg');
+  msgDiv.textContent = "Registrando...";
+
+  // Recoge los datos del formulario
+  const data = {
+    tipo_documento: form.tipo_documento.value,
+    documento: form.documento.value,
+    nombre: form.nombre.value,
+    apellido: form.apellido.value,
+    telefono: form.telefono.value,
+    direccion: form.direccion.value,
+    ciudad: form.ciudad.value,
+    email: form.email.value,
+    password: form.clave.value // ajustar si el backend espera otro nombre
+  };
+
+  try {
+    // Cambia la URL si tu backend está en otro puerto o dominio
+    const res = await fetch('/api/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+
+    const result = await res.json();
+    msgDiv.textContent = result.message;
+    if(result.success) {
+      msgDiv.style.color = "green";
+      form.reset();
+    } else {
+      msgDiv.style.color = "red";
+    }
+  } catch (err) {
+    msgDiv.textContent = "Ocurrió un error al registrar. Intenta más tarde.";
+    msgDiv.style.color = "red";
+  }
+});
+    </script>
+</body>
+</html>

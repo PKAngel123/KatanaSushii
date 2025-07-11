@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>Panel Administrador | Katana Sushi</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/normalize.css">
+    <link rel="stylesheet" href="./css/mdb.min.css">
+    <link rel="stylesheet" href="./css/all.css">
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="icon" type="image/png" href="icon.png">
+    <script src="./js/sweetalert2.js"></script>
+    <style>
+        .admin-section { margin: 32px auto; max-width: 1100px; background: #fff; border-radius: 12px; box-shadow: 0 2px 16px #0002; padding: 32px; }
+        .admin-title { font-size: 2rem; color: #b21f1f; font-family: 'Permanent Marker', cursive; margin-bottom: 24px; }
+        .admin-table th, .admin-table td { vertical-align: middle; }
+        .admin-btn { margin-right: 8px; }
+        .admin-form { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
+        .admin-form input, .admin-form select { min-width: 120px; }
+        .pending-badge { font-size: 1rem; background: #f7c873; color: #222; }
+    </style>
+</head>
+<body>
+    <header class="header full-box">
+        <div class="header-brand full-box" style="display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 0 24px;">
+            <div>
+                <a href="index.html">
+                    <img src="./assets/img/logo.png" alt="logo" class="img-fluid" style="max-height: 60px;">
+                </a>
+            </div>
+            <div style="font-family: 'Never Settle', serif; color:#f7c873; font-size:2rem; letter-spacing: 2px;">
+                . Katana Sushi
+            </div>
+            <nav class="header-navbar full-box poppins-regular font-weight-bold" style="margin-left:auto;">
+                <ul class="list-unstyled full-box" style="display: flex; gap: 1.5rem; align-items: center; margin-bottom: 0;">
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="menu.html">Menú</a></li>
+                    <li><a href="#" onclick="logout()">Cerrar sesión</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <section class="admin-section">
+            <div class="admin-title">Gestión de Productos del Menú</div>
+            <form class="admin-form" id="form-producto">
+                <input type="hidden" id="producto-id">
+                <input type="text" id="producto-nombre" placeholder="Nombre" required>
+                <input type="number" id="producto-precio" placeholder="Precio" min="0" step="0.01" required>
+                <input type="text" id="producto-img" placeholder="URL Imagen" required>
+                <button type="submit" class="btn btn-success admin-btn">Guardar</button>
+                <button type="button" class="btn btn-secondary admin-btn" onclick="resetForm()">Limpiar</button>
+            </form>
+            <table class="table table-bordered admin-table">
+                <thead class="table-light">
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Precio</th>
+                        <th>Imagen</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="productos-tbody">
+                    <!-- Productos aquí -->
+                </tbody>
+            </table>
+        </section>
+        <section class="admin-section">
+            <div class="admin-title">Pedidos Pendientes</div>
+            <table class="table table-bordered admin-table">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID Pedido</th>
+                        <th>Cliente</th>
+                        <th>Productos</th>
+                        <th>Total</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="pedidos-tbody">
+                    <!-- Pedidos aquí -->
+                </tbody>
+            </table>
+        </section>
+    </main>
+    <script src="./js/mdb.min.js"></script>
+    <script>
+    // --- Productos (Conexión real al backend) ---
+    let productos = [];
+    function renderProductos() {
+        const tbody = document.getElementById('productos-tbody');
+        tbody.innerHTML = '';
+        productos.forEach(p => {
+            tbody.innerHTML += `<tr>
+                <td>${p.nombre}</td>
+                <td>$${p.precio.toFixed(2)}</td>
+                <td><img src="${p.img}" alt="img" style="width:60px;"></td>
+                <td>
+                    <button class='btn btn-info btn-sm' onclick='editProducto(${p.id})'>Editar</button>
+                    <button class='btn btn-danger btn-sm' onclick='deleteProducto(${p.id})'>Eliminar</button>
+                </td>
+            </tr>`;
+        });
+    }
+    async function fetchProductos() {
+        const res = await fetch('/api/productos');
+        productos = await res.json();
+        renderProductos();
+    }
+    async function saveProducto(producto) {
+        const method = producto.id ? 'PUT' : 'POST';
+        const url = producto.id ? `/api/productos/${producto.id}` : '/api/productos';
+        await fetch(url, {
+            method,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(producto)
+        });
+        fetchProductos();
+    }
+    async function deleteProducto(id) {
+        await fetch(`/api/productos/${id}`, { method: 'DELETE' });
+        fetchProductos();
+    }
+    document.getElementById('form-producto').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const id = document.getElementById('producto-id').value;
+        const nombre = document.getElementById('producto-nombre').value;
+        const precio = parseFloat(document.getElementById('producto-precio').value);
+        const img = document.getElementById('producto-img').value;
+        await saveProducto({ id: id ? Number(id) : undefined, nombre, precio, img });
+        resetForm();
+    });
+    function editProducto(id) {
+        const p = productos.find(x => x.id === id);
+        document.getElementById('producto-id').value = p.id;
+        document.getElementById('producto-nombre').value = p.nombre;
+        document.getElementById('producto-precio').value = p.precio;
+        document.getElementById('producto-img').value = p.img;
+    }
+    function resetForm() {
+        document.getElementById('form-producto').reset();
+        document.getElementById('producto-id').value = '';
+    }
+    fetchProductos();
+
+    // --- Pedidos Pendientes (Conexión real al backend) ---
+    let pedidos = [];
+    function renderPedidos() {
+        const tbody = document.getElementById('pedidos-tbody');
+        tbody.innerHTML = '';
+        pedidos.forEach(p => {
+            tbody.innerHTML += `<tr>
+                <td>${p.id}</td>
+                <td>${p.cliente}</td>
+                <td>${p.productos || ''}</td>
+                <td>$${p.total ? p.total.toFixed(2) : ''}</td>
+                <td><span class="badge pending-badge">${p.estado}</span></td>
+                <td><button class='btn btn-success btn-sm' onclick='marcarCompletado(${p.id})'>Marcar como completado</button></td>
+            </tr>`;
+        });
+    }
+    async function fetchPedidos() {
+        const res = await fetch('/api/pedidos?estado=pendiente');
+        pedidos = await res.json();
+        renderPedidos();
+    }
+    async function marcarCompletado(id) {
+        await fetch(`/api/pedidos/${id}/completar`, { method: 'PUT' });
+        fetchPedidos();
+    }
+    fetchPedidos();
+
+    // --- Logout ---
+    function logout() {
+        localStorage.removeItem('usuario');
+        window.location.href = 'index.html';
+    }
+    </script>
+</body>
+</html>

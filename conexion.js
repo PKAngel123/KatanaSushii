@@ -1,17 +1,22 @@
 const mysql = require('mysql2');
-const conexion = mysql.createConnection({
-    host: process.env.MYSQLHOST || "localhost",
-    database: process.env.MYSQLDATABASE || "servicios",
-    user: process.env.MYSQLUSER || "root",
-    password: process.env.MYSQLPASSWORD || "",
-    port: process.env.MYSQLPORT || 3306
-});
+let conexion;
+if (process.env.MYSQL_URL) {
+    // Railway u otras plataformas pueden proveer la URL completa
+    conexion = mysql.createConnection(process.env.MYSQL_CON);
+} else {
+    conexion = mysql.createConnection({
+        host: process.env.DB_HOST || "localhost",
+        database: process.env.DB_NAME || "servicios",
+        user: process.env.DB_USER || "root",
+        password: process.env.DB_PASSWORD || ""
+    });
+}
 
 conexion.connect(function(err){
     if(err){
         throw err;
     }else{
-        console.log("conexion exitosa");
+    console.log("conexion exitosa");
     }
 });
 
